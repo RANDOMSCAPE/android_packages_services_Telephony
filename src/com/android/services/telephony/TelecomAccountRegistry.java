@@ -1703,14 +1703,16 @@ public class TelecomAccountRegistry {
 
     private boolean isRadioInValidState(Phone[] phones) {
         boolean isApmSimNotPwrDown = false;
-        try {
-            int propVal = getIExtTelephony().getPropertyValueInt(APM_SIM_NOT_PWDN_PROPERTY, 0);
-            isApmSimNotPwrDown = (propVal == 1);
-            Log.d(this, "isRadioInValidState, propVal = " + propVal +
-                    " isApmSimNotPwrDown = " + isApmSimNotPwrDown);
-        } catch (RemoteException|NullPointerException ex) {
-            Log.w(this, "Failed to get property: + " + APM_SIM_NOT_PWDN_PROPERTY +
-                    " , Exception: " + ex);
+        if (getIExtTelephony() != null) {
+            try {
+                int propVal = getIExtTelephony().getPropertyValueInt(APM_SIM_NOT_PWDN_PROPERTY, 0);
+                isApmSimNotPwrDown = (propVal == 1);
+                Log.d(this, "isRadioInValidState, propVal = " + propVal +
+                        " isApmSimNotPwrDown = " + isApmSimNotPwrDown);
+            } catch (RemoteException|NullPointerException ex) {
+                Log.w(this, "Failed to get property: + " + APM_SIM_NOT_PWDN_PROPERTY +
+                        " , Exception: " + ex);
+            }
         }
 
         int isAPMOn = Settings.Global.getInt(mContext.getContentResolver(),
