@@ -1553,22 +1553,22 @@ public class TelecomAccountRegistry {
                         int slotId = phone.getPhoneId();
                         boolean isAccountAdded = false;
 
-                        if (mTelephonyManager.getPhoneCount() > 1) {
-                            if (getIExtTelephony() != null) {
-                                try {
-                                    //get current provision state of the SIM.
-                                    provisionStatus =
-                                            getIExtTelephony().getCurrentUiccCardProvisioningStatus(slotId);
-                                } catch (RemoteException ex) {
-                                    provisionStatus = INVALID_STATE;
-                                    Log.w(this, "Failed to get status , slotId: "+ slotId +" Exception: "
-                                            + ex);
-                                } catch (NullPointerException ex) {
-                                    provisionStatus = INVALID_STATE;
-                                    Log.w(this, "Failed to get status , slotId: "+ slotId +" Exception: "
-                                            + ex);
-                                }
-			    }
+                        IExtTelephony mExtTelephony = getIExtTelephony();
+
+                        if (mExtTelephony != null && mTelephonyManager.getPhoneCount() > 1) {
+                            try {
+                                //get current provision state of the SIM.
+                                provisionStatus =
+                                        mExtTelephony.getCurrentUiccCardProvisioningStatus(slotId);
+                            } catch (RemoteException ex) {
+                                provisionStatus = INVALID_STATE;
+                                Log.w(this, "Failed to get status , slotId: "+ slotId +" Exception: "
+                                        + ex);
+                            } catch (NullPointerException ex) {
+                                provisionStatus = INVALID_STATE;
+                                Log.w(this, "Failed to get status , slotId: "+ slotId +" Exception: "
+                                        + ex);
+                            }
                         }
 
                         // In SSR case, UiccCard's would be disposed hence the provision state received as

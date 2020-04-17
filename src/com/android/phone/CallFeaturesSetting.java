@@ -477,7 +477,7 @@ public class CallFeaturesSetting extends PreferenceActivity
                                     new Preference.OnPreferenceClickListener() {
                                         @Override
                                         public boolean onPreferenceClick(Preference preference) {
-                                             Intent intent = mPhone.isUtEnabled() ?
+                                            Intent intent = mPhone.isUtEnabled() ?
                                                 mSubscriptionInfoHelper.getIntent(CallForwardType.class)
                                                 : new Intent(CdmaCallOptions.CALL_FORWARD_INTENT);
                                             intent.putExtra(
@@ -548,13 +548,17 @@ public class CallFeaturesSetting extends PreferenceActivity
                         imsManager.getImsServiceState() == ImsFeature.STATE_READY) {
                     mImsSettingsScreen.setOnPreferenceClickListener(
                             new Preference.OnPreferenceClickListener() {
-                         @Override
-                         public boolean onPreferenceClick(Preference preference) {
-                             Intent intent = new Intent("org.codeaurora.IMS_SETTINGS");
-                             intent.putExtra(QtiCallConstants.EXTRA_PHONE_ID, mPhone.getPhoneId());
-                             startActivity(intent);
-                             return true;
-                         }
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            try {
+                                Intent intent = new Intent("org.codeaurora.IMS_SETTINGS");
+                                intent.putExtra(QtiCallConstants.EXTRA_PHONE_ID, mPhone.getPhoneId());
+                                startActivity(intent);
+                                return true;
+                            } catch (NoClassDefFoundError ex) {
+                                return true;
+                            }
+                        }
                     });
                 } else {
                     prefSet.removePreference(mImsSettingsScreen);
